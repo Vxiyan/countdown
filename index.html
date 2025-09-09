@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A simple birthday countdown timer">
+        <title>Countdown</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f0f8ff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                font: comic sans ms;
+            }
+            .container {
+                text-align: center;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                font-family: comic sans ms;
+            }
+            h1 {
+                color: #333333;
+                font-family: comic sans ms;
+            }
+            input[type="date"] {
+                padding: 10px;
+                margin-top: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                font-family: comic sans ms;
+            }
+            button {
+                padding: 10px 20px;
+                margin-top: 10px;
+                border-radius: 5px;
+                border: none;
+                background-color: #4CAF50;
+                color: white;
+                cursor: pointer;
+                font-family: comic sans ms;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            #countdownDisplay {
+                margin-top: 20px;
+                font-size: 24px;
+                color: #f28282;
+                font-family: comic sans ms;
+            }
+        </style>
+        <script>
+            function calculateCountdown(birthday) {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                let nextBirthday = new Date(birthday);
+                nextBirthday.setFullYear(currentYear);
+
+                if (nextBirthday < now) {
+                    nextBirthday.setFullYear(currentYear + 1);
+                }
+
+                const diff = nextBirthday - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                return { days, hours, minutes, seconds };
+            }
+
+            function startCountdown() {
+                const birthdayInput = document.getElementById('birthday').value;
+                if (!birthdayInput) {
+                    alert('Please enter your birthday.');
+                    return;
+                }
+
+                const countdownDisplay = document.getElementById('countdownDisplay');
+                
+                function updateCountdown() {
+                    const { days, hours, minutes, seconds } = calculateCountdown(birthdayInput);
+                    countdownDisplay.textContent = `Time until your event: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                    if (days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0) {
+                        clearInterval(interval);
+                        countdownDisplay.textContent = "*BZZZ* Times up!";
+                    }
+                }
+
+                updateCountdown();
+                const interval = setInterval(updateCountdown, 1000);
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('countdownBtn').addEventListener('click', startCountdown);
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Countdown</h1>
+            <label for="birthday">Enter the date you wish:</label>
+            <input type="date" id="birthday" name="birthday">
+            <button id="countdownBtn">Start Countdown</button>
+            <div id="countdownDisplay"></div>
+        </div>
+    </body>
+</html>
